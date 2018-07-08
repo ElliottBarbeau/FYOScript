@@ -1,1 +1,1 @@
-XD
+print("Ayy lmao")
