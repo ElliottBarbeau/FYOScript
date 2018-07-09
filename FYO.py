@@ -1,19 +1,16 @@
 import csv
 
-def readcsv(uOttawa League of Legends):
-    xfile = open(filename, "rU")
-    reader = csv.reader(file, delimiter = ";")
-
-    for row in reader:
-        rowCount+= 1
-    
-    a = [[] for i in range(rowCount)]
-
+def readcsv(fileName):
     rowCount = 0
-    for row in reader:
-        a[rowCount].append(row)
-        rowCount+=1
-
-    xfile.close()
+    with open(fileName, encoding="Latin-1") as csvfile:
+        reader = csv.reader(csvfile)
+        a = []
+        lineCount = 0
+        next(reader)
+        
+        for line in reader:
+            a.append(line)
+            lineCount=+1            
     return(a)
 
+print(readcsv("C:/Users/Owner/Desktop/FYO.csv"))
