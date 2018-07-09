@@ -3,7 +3,7 @@ import csv
 def readcsv(fileName):
     rowCount = 0
     with open(fileName, encoding="Latin-1") as csvfile:
-        reader = csv.reader(csvfile)
+        reader = csv.DictReader(csvfile)
         a = []
         lineCount = 0
         next(reader)
