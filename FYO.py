@@ -1,7 +1,6 @@
 import csv
 
 def readcsv(fileName):
-    rowCount = 0
     with open(fileName, encoding="Latin-1") as csvfile:
         reader = csv.DictReader(csvfile)
         a = []
@@ -13,4 +12,21 @@ def readcsv(fileName):
             lineCount=+1            
     return(a)
 
-print(readcsv("C:/Users/Owner/Desktop/FYO.csv"))
+def streamSep(fileName):
+    with open(fileName, encoding="Latin-1") as csvfile:
+        reader = csv.DictReader(csvfile)
+        final = []
+        temp = []
+        
+        for line in reader:
+            temp.append(line['stream'])
+        
+        for i in temp:
+            if ";" in i:
+                final.append(i.split(";"))
+            else:
+                final.append(i)
+
+    return(final)
+
+print(streamSep("C:/Users/Owner/Desktop/FYO.csv"))
