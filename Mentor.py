@@ -9,5 +9,6 @@ class Mentor:
 		self.answers = answers
 		self.student = None
 		self.hasStudent = false
+		self.matchScore = 0
 		
 		
