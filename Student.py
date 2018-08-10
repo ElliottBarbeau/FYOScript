@@ -1,13 +1,22 @@
 class Student:
 	"""Class for student"""
+	
 	def __init__ (self, name, answers):
 		self.name = name
 		self.answers = answers
+		self.matches = {}
+		self.isMatched = false
+		self.mentor = None
 	
-	def getAnswer(self, index):
-		return self.answers[i]
-	def getAcademicAnswers:
+	def setMatch(self, key, score):
+		self.matches[key] = score
 	
-##It was decided that an object was not needed. Instead, we'll be simply using constants for stuff such as getting academic answers and whatnot
-
+	def getBestToWorse(self):
+		toRet = sorted(self.matches)
+		toRet.reverse()
+		return toRet
+	
+	
+	
+	
 	
