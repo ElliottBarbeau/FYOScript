@@ -5,7 +5,7 @@ class Student:
 		self.name = name
 		self.answers = answers
 		self.matches = {}
-		self.isMatched = false
+		self.isMatched = False
 		self.mentor = None
 		self.topMentors = []
 	
