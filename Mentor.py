@@ -10,8 +10,9 @@ class Mentor:
 		self.student = None
 		self.hasStudent = False
 		self.matchScore = 0
-		self.secondStudent = None
-		self.hasSecondStudent = False
+		self.student2 = None
+		self.hasStudent2 = False
+		self.matchScore2 = 0
 		
 	def unmatch(self):
 		tempStudent = self.student
@@ -26,3 +27,17 @@ class Mentor:
                 self.matchScore = student.matches(self.name)
                 student.mentor = self
                 student.isMatched = True
+	
+	def match2(self, student):
+		self.student2 = student
+                self.hasStudent2 = True
+                self.matchScore2 = student.matches(self.name)
+                student.mentor = self
+                student.isMatched = True
+		
+	def unmatch2(self):
+		tempStudent = self.student2
+		tempStudent.isMatched = False
+		tempStudent.mentor = None
+		self.student2 = None
+		self.hasStudent2 = False
