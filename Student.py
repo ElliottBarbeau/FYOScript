@@ -13,7 +13,7 @@ class Student:
 		self.matches[key] = score
 	
 	def getBestToWorse(self):
-		toRet = sorted(self.matches)
+		toRet = sorted(self.matches.items(), key = lambda x:x[1])
 		toRet.reverse()
 		return toRet
 	
