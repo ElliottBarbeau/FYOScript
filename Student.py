@@ -4,7 +4,7 @@ class Student:
 	def __init__ (self, name, answers):
 		self.name = name
 		self.answers = answers
-		self.matches = {}
+		self.matches = []
 		self.isMatched = false
 		self.mentor = None
 	
