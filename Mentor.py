@@ -7,6 +7,7 @@ class Mentor:
 	def __init__(self, name, answers):
 		self.name = name
 		self.answers = answers
-		self.students = set()
+		self.student = None
+		self.hasStudent = false
 		
 		
