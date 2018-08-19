@@ -1,7 +1,7 @@
 class Student:
 	"""Class for student"""
-	
 	def __init__ (self, name, answers):
+		self.dictionary = {}
 		self.name = name
 		self.answers = answers
 		self.matches = {}
@@ -16,8 +16,6 @@ class Student:
 		toRet = sorted(self.matches.items(), key = lambda x:x[1])
 		toRet.reverse()
 		return toRet
-	
-	
-	
-	
-	
+
+	def getAnswers(self):
+		return self.answers
