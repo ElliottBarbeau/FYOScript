@@ -102,15 +102,15 @@ def profSkillsSep(fileName):
 
 def weight(q):
     if q == 0:
-        return 1
+        return 2
     elif q == 1:
         return 0.5
     elif q == 2:
-        return 0.75
+        return 0.5
     elif q == 3:
-        return 1.25
+        return 1.5
     elif q == 4:
-        return 0.75
+        return 1
 
 def mentor(fileName):
     with open(fileName, encoding="Latin-1") as csvfile:
