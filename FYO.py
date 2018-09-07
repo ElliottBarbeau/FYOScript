@@ -1,5 +1,4 @@
 import csv
-import spacy
 
 from Student import Student
 from Mentor import Mentor
@@ -121,11 +120,11 @@ def mentor(fileName):
         for line in reader:
             name.append(line['name'])
         
-        stream = streamSep("C:/Users/Owner/Desktop/MentorInfo.csv")
-        internship = internshipSep("C:/Users/Owner/Desktop/MentorInfo.csv")
-        clubs = clubsSep("C:/Users/Owner/Desktop/MentorInfo.csv")
-        skills = skillsSep("C:/Users/Owner/Desktop/MentorInfo.csv")
-        profSkills = profSkillsSep("C:/Users/Owner/Desktop/MentorInfo.csv")
+        stream = streamSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
+        internship = internshipSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
+        clubs = clubsSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
+        skills = skillsSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
+        profSkills = profSkillsSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
 
         for i in range(0, len(stream)):
             answers = []
@@ -148,11 +147,11 @@ def student(fileName):
         for line in reader:
             name.append(line['name'])
         
-        stream = streamSep("C:/Users/Owner/Desktop/StudentInfo.csv")
-        internship = internshipSep("C:/Users/Owner/Desktop/StudentInfo.csv")
-        clubs = clubsSep("C:/Users/Owner/Desktop/StudentInfo.csv")
-        skills = skillsSep("C:/Users/Owner/Desktop/StudentInfo.csv")
-        profSkills = profSkillsSep("C:/Users/Owner/Desktop/StudentInfo.csv")
+        stream = streamSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
+        internship = internshipSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
+        clubs = clubsSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
+        skills = skillsSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
+        profSkills = profSkillsSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
 
         for i in range(0, len(stream)):
             answers = []
@@ -166,30 +165,26 @@ def student(fileName):
 
     return(student)
 
-mentorList = mentor("C:/Users/Owner/Desktop/MentorInfo.csv")
-studentList = student("C:/Users/Owner/Desktop/StudentInfo.csv")
+mentorList = mentor("C:/Users/Elliott/Desktop/MentorInfo.csv")
+studentList = student("C:/Users/Elliott/Desktop/StudentInfo.csv")
 
-for i in range(len(studentList)):
-    for j in range(len(mentorList)):
-        studentList[i].dictionary[mentorList[j].getName()] = 0
-        for k in range(len(studentList[i].getAnswers())):
-            if type(studentList[i].getAnswers()[k]) == list:
-                for answer in studentList[i].getAnswers()[k]:
+for i, stud in enumerate(studentList):
+    for j, mentor in enumerate(mentorList):
+        stud.dictionary[mentor.getName()] = 0
+        for k, answers in enumerate(stud.getAnswers()):
+            if type(stud.getAnswers()[k]) == list:
+                for answer in answers:
                     if answer in mentorList[i].getAnswers()[k]:
-                        studentList[i].dictionary[mentorList[j].getName()] += weight(k)
-            elif studentList[i].getAnswers()[k] == mentorList[j].getAnswers()[k]:
-                studentList[i].dictionary[mentorList[j].getName()] += weight(k)
+                        stud.dictionary[mentor.getName()] += weight(k)
+            elif stud.getAnswers()[k] == mentor.getAnswers()[k]:
+                stud.dictionary[mentor.getName()] += weight(k)
 
-print(studentList[0].dictionary)
-"""
+for i, student in enumerate(studentList):
+    print(student.dictionary[mentorList[i].getName()])
+'''
 Weights must be assigned before
 Student dictionaries and mentor dictionaries must already be made
 Length variable for topMentors must be determined
-
-"""
-
-"""
-
 for student in indStudentList:
     for mentor in indMentorList:
         student.matches[mentor.name] = 0
@@ -232,7 +227,4 @@ for i in range(topMentors.lengthVariable):
                 if student.matches(potTopMentor.name) > potTopMentor.matchScore:
                     potTopMentor.unmatch2()
                     potTopMentor.match2(student)
-
-##if there are still unmatched, keep incrementing lengthvariable and repeat last for lop
-
-"""
+'''
