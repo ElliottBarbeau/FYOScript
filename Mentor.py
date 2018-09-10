@@ -1,6 +1,7 @@
 class Mentor:
 
-    def __init__(self, name, answers):
+    def __init__(self, name, answers, longAnswers):
+        self.longAnswers = longAnswers
         self.name = name
         self.answers = answers
         self.student = None
@@ -43,4 +44,7 @@ class Mentor:
 
     def getName(self):
         return self.name
+
+    def getLongAnswers(self):
+        return self.longAnswers
         

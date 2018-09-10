@@ -1,7 +1,11 @@
 import csv
-
+import spacy
 from Student import Student
 from Mentor import Mentor
+
+mentorFileName = "C:/Users/Elliott/Desktop/MentorInfo.csv"
+studentFileName = "C:/Users/Elliott/Desktop/StudentInfo.csv"
+nlp = spacy.load('en')
 
 def readcsv(fileName):
     with open(fileName, encoding="Latin-1") as csvfile:
@@ -99,6 +103,32 @@ def profSkillsSep(fileName):
 
     return(final)
 
+def mentorLongAnswers(fileName):
+    with open(fileName, encoding = "Latin-1") as csvfile:
+        reader = csv.DictReader(csvfile)
+        longAnswers = []
+
+        for line in reader:
+                longAnswers.append(line['interests'])
+                longAnswers.append(line['tvShows'])
+                longAnswers.append(line['sports'])
+                longAnswers.append(line['music'])
+
+    return longAnswers
+
+def studentLongAnswers(fileName):
+    with open(fileName, encoding = "Latin-1") as csvfile:
+        reader = csv.DictReader(csvfile)
+        longAnswers = []
+
+        for line in reader:
+                longAnswers.append(line['interests'])
+                longAnswers.append(line['tvShows'])
+                longAnswers.append(line['sports'])
+                longAnswers.append(line['music'])
+
+    return longAnswers
+
 def weight(q):
     if q == 0:
         return 2
@@ -116,24 +146,25 @@ def mentor(fileName):
         reader = csv.DictReader(csvfile)
         name = []
         mentor = []
+        answers = []
         
         for line in reader:
             name.append(line['name'])
         
-        stream = streamSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
-        internship = internshipSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
-        clubs = clubsSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
-        skills = skillsSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
-        profSkills = profSkillsSep("C:/Users/Elliott/Desktop/MentorInfo.csv")
+        stream = streamSep(mentorFileName)
+        internship = internshipSep(mentorFileName)
+        clubs = clubsSep(mentorFileName)
+        skills = skillsSep(mentorFileName)
+        profSkills = profSkillsSep(mentorFileName)
 
         for i in range(0, len(stream)):
-            answers = []
+            mLA = mentorLongAnswers(mentorFileName)
             answers.append(stream[i])
             answers.append(internship[i])
             answers.append(clubs[i])
             answers.append(skills[i])
             answers.append(profSkills[i])
-            mentor.append(Mentor(name[i], answers))
+            mentor.append(Mentor(name[i], answers, mLA[i]))
             answers = []
 
     return(mentor)
@@ -143,44 +174,51 @@ def student(fileName):
         reader = csv.DictReader(csvfile)
         name = []
         student = []
+        answers = []
         
         for line in reader:
             name.append(line['name'])
         
-        stream = streamSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
-        internship = internshipSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
-        clubs = clubsSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
-        skills = skillsSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
-        profSkills = profSkillsSep("C:/Users/Elliott/Desktop/StudentInfo.csv")
+        stream = streamSep(studentFileName)
+        internship = internshipSep(studentFileName)
+        clubs = clubsSep(studentFileName)
+        skills = skillsSep(studentFileName)
+        profSkills = profSkillsSep(studentFileName)
 
         for i in range(0, len(stream)):
-            answers = []
+            sLA = mentorLongAnswers(mentorFileName)
             answers.append(stream[i])
             answers.append(internship[i])
             answers.append(clubs[i])
             answers.append(skills[i])
             answers.append(profSkills[i])
-            student.append(Student(name[i], answers))
+            mentor.append(Mentor(name[i], answers, sLA[i]))
             answers = []
 
     return(student)
 
-mentorList = mentor("C:/Users/Elliott/Desktop/MentorInfo.csv")
-studentList = student("C:/Users/Elliott/Desktop/StudentInfo.csv")
+mentorList = mentor(mentorFileName)
+studentList = student(studentFileName)
 
 for i, stud in enumerate(studentList):
     for j, mentor in enumerate(mentorList):
         stud.dictionary[mentor.getName()] = 0
         for k, answers in enumerate(stud.getAnswers()):
-            if type(stud.getAnswers()[k]) == list:
+            if type(answers == list):
                 for answer in answers:
                     if answer in mentorList[i].getAnswers()[k]:
                         stud.dictionary[mentor.getName()] += weight(k)
-            elif stud.getAnswers()[k] == mentor.getAnswers()[k]:
+            elif answers == mentor.getAnswers()[k]:
                 stud.dictionary[mentor.getName()] += weight(k)
 
-for i, student in enumerate(studentList):
-    print(student.dictionary[mentorList[i].getName()])
+for i, stud in enumerate(studentList):
+    for j, mentor in enumerate(mentorList):
+        for k, answers in enumerate(stud.getLongAnswers()):
+            sim = answers.similarity(mentor.getLongAnswers[k])
+            print(sim)
+            stud.dictionary[mentor.getName()] += sim
+
+
 '''
 Weights must be assigned before
 Student dictionaries and mentor dictionaries must already be made
