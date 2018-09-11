@@ -241,7 +241,7 @@ for i, stud in enumerate(studentList):
             doc1 = nlp(answers)
             doc2 = nlp(mentor.getLongAnswers()[k])
             sim = doc1.similarity(doc2)
-            stud.dictionary[mentor.getName()] += 2 * sim
+            stud.dictionary[mentor.getName()] += sim
        
 '''
 Weights must be assigned before
