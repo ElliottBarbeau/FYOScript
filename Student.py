@@ -1,6 +1,7 @@
 class Student:
 	"""Class for student"""
-	def __init__ (self, name, answers):
+	def __init__ (self, name, answers, longAnswers):
+		self.longAnswers = longAnswers
 		self.dictionary = {}
 		self.name = name
 		self.answers = answers
@@ -19,3 +20,6 @@ class Student:
 
 	def getAnswers(self):
 		return self.answers
+
+	def getLongAnswers(self):
+		return self.longAnswers
