@@ -106,28 +106,52 @@ def profSkillsSep(fileName):
 def mentorLongAnswers(fileName):
     with open(fileName, encoding = "Latin-1") as csvfile:
         reader = csv.DictReader(csvfile)
-        longAnswers = []
+        interests = []
+        tvShows = []
+        sports = []
+        music = []
+        final = []
 
         for line in reader:
-                longAnswers.append(line['interests'])
-                longAnswers.append(line['tvShows'])
-                longAnswers.append(line['sports'])
-                longAnswers.append(line['music'])
+                interests.append(line['interests'])
+                tvShows.append(line['tvShows'])
+                sports.append(line['sports'])
+                music.append(line['music'])
 
-    return longAnswers
+        for i, interest in enumerate(interests):
+            longAnswers = []
+            longAnswers.append(interest)
+            longAnswers.append(tvShows[i])
+            longAnswers.append(sports[i])
+            longAnswers.append(music[i])
+            final.append(list(longAnswers))
+    
+    return final
 
 def studentLongAnswers(fileName):
     with open(fileName, encoding = "Latin-1") as csvfile:
         reader = csv.DictReader(csvfile)
-        longAnswers = []
+        interests = []
+        tvShows = []
+        sports = []
+        music = []
+        final = []
 
         for line in reader:
-                longAnswers.append(line['interests'])
-                longAnswers.append(line['tvShows'])
-                longAnswers.append(line['sports'])
-                longAnswers.append(line['music'])
+                interests.append(line['interests'])
+                tvShows.append(line['tvShows'])
+                sports.append(line['sports'])
+                music.append(line['music'])
 
-    return longAnswers
+        for i, interest in enumerate(interests):
+            longAnswers = []
+            longAnswers.append(interest)
+            longAnswers.append(tvShows[i])
+            longAnswers.append(sports[i])
+            longAnswers.append(music[i])
+            final.append(list(longAnswers))
+    
+    return final
 
 def weight(q):
     if q == 0:
@@ -214,12 +238,11 @@ for i, stud in enumerate(studentList):
 for i, stud in enumerate(studentList):
     for j, mentor in enumerate(mentorList):
         for k, answers in enumerate(stud.getLongAnswers()):
-            print(mentor.getLongAnswers())
             doc1 = nlp(answers)
             doc2 = nlp(mentor.getLongAnswers()[k])
             sim = doc1.similarity(doc2)
             stud.dictionary[mentor.getName()] += 2 * sim
-            
+       
 '''
 Weights must be assigned before
 Student dictionaries and mentor dictionaries must already be made
