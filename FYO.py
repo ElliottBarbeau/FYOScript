@@ -186,13 +186,13 @@ def student(fileName):
         profSkills = profSkillsSep(studentFileName)
 
         for i in range(0, len(stream)):
-            sLA = mentorLongAnswers(mentorFileName)
+            sLA = studentLongAnswers(studentFileName)
             answers.append(stream[i])
             answers.append(internship[i])
             answers.append(clubs[i])
             answers.append(skills[i])
             answers.append(profSkills[i])
-            mentor.append(Mentor(name[i], answers, sLA[i]))
+            student.append(Student(name[i], answers, sLA[i]))
             answers = []
 
     return(student)
@@ -213,12 +213,12 @@ for i, stud in enumerate(studentList):
 
 for i, stud in enumerate(studentList):
     for j, mentor in enumerate(mentorList):
-        for k, answers in enumerate(stud.getLongAnswers()):
-            sim = answers.similarity(mentor.getLongAnswers[k])
-            print(sim)
-            stud.dictionary[mentor.getName()] += sim
-
-
+        for k, answers in enumerate(stud.getAnswers()):
+            doc1 = nlp(answers)
+            doc2 = nlp(mentor.getAnswers()[k])
+            sim = doc1.similarity(doc2)
+            stud.dictionary[mentor.getName()] += 2 * sim
+            
 '''
 Weights must be assigned before
 Student dictionaries and mentor dictionaries must already be made
