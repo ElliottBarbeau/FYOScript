@@ -21,14 +21,14 @@ class Mentor:
     def match(self, student):
         self.student = student
         self.hasStudent = True
-        self.matchScore = student.matches(self.name)
+        self.matchScore = student.matches[self.name]
         student.mentor = self
         student.isMatched = True
 
     def match2(self, student):
         self.student2 = student
         self.hasStudent2 = True
-        self.matchScore2 = student.matches(self.name)
+        self.matchScore2 = student.matches[self.name]
         student.mentor = self
         student.isMatched = True
 

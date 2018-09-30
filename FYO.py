@@ -3,8 +3,8 @@ import spacy
 from Student import Student
 from Mentor import Mentor
 
-mentorFileName = "C:/Users/Elliott/Desktop/MentorInfo.csv"
-studentFileName = "C:/Users/Elliott/Desktop/StudentInfo.csv"
+mentorFileName = "C:/Users/Elliott/Desktop/IBHMentors.csv"
+studentFileName = "C:/Users/Elliott/Desktop/IBHMentees.csv"
 nlp = spacy.load('en')
 
 def readcsv(fileName):
@@ -231,39 +231,22 @@ for i, stud in enumerate(studentList):
             if type(answers == list):
                 for answer in answers:
                     if answer in mentorList[i].getAnswers()[k]:
-                        stud.dictionary[mentor.getName()] += weight(k)
+                        stud.matches[mentor.getName()] += weight(k)
             elif answers == mentor.getAnswers()[k]:
-                stud.dictionary[mentor.getName()] += weight(k)
+                stud.matches[mentor.getName()] += weight(k)
 
 for i, stud in enumerate(studentList):
+    ans1 = nlp(stud.getLongAnswers()[0])
     for j, mentor in enumerate(mentorList):
-        for k, answers in enumerate(stud.getLongAnswers()):
-            ans1 = nlp(answers)
-            ans2 = nlp(mentor.getLongAnswers()[k])
-            sim = doc1.similarity(doc2)
-            stud.dictionary[mentor.getName()] += 0.75 * sim
-       
-'''
-Weights must be assigned before
-Student dictionaries and mentor dictionaries must already be made
-Length variable for topMentors must be determined
-for student in indStudentList:
-    for mentor in indMentorList:
-        student.matches[mentor.name] = 0
+            ans2 = nlp(mentor.getLongAnswers()[0])
+            sim = ans1.similarity(ans2)
+            stud.matches[mentor.getName()] += 0.75 * sim
 
-for student in indStudentList:
-    for mentor in indMentorList:
-        for i in range(answerlist.length):
-            if student.answers[i] == mentor.answers[i]:
-                student.matches[mentor.name] += correctWeight[i]
-            else:
-                student.matches[mentor.name] -= wrongWeight[i]
-
-for student in indStudentList:
-    student.topMentors = student.getBestToWorse()[:topMentors.lengthVariable]
+for student in studentList:
+    student.topMentors = student.getBestToWorse()[:mentorList.length]
 
 for i in range(topMentors.lengthVariable):
-    for student in indStudentList:
+    for student in studentList:
         if student.isMatched is False:
             potTopMentor = student.topMentors.pop(0)
             if potTopMentor.hasStudent is False:
@@ -274,10 +257,10 @@ for i in range(topMentors.lengthVariable):
                     potTopMentor.match(student)
 
 unmatchedStudents = []     
-for student in indStudentList:
+for student in studentList:
     if student.isMatched is False:
         unmatchedStudents.append(student)
-        student.topMentors = student.getBestToWorse()[:topMentors.lengthVariable]
+        student.topMentors = student.getBestToWorse()[:mentorList.length]
 
 for i in range(topMentors.lengthVariable):
     for student in unmatchedStudents:
@@ -289,4 +272,3 @@ for i in range(topMentors.lengthVariable):
                 if student.matches(potTopMentor.name) > potTopMentor.matchScore:
                     potTopMentor.unmatch2()
                     potTopMentor.match2(student)
-'''
