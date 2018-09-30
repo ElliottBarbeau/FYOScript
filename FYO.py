@@ -3,8 +3,8 @@ import spacy
 from Student import Student
 from Mentor import Mentor
 
-mentorFileName = "C:/Users/Elliott/Desktop/IBHMentors.csv"
-studentFileName = "C:/Users/Elliott/Desktop/IBHMentees.csv"
+mentorFileName = "C:/Users/Owner/Desktop/IBHMentors.csv"
+studentFileName = "C:/Users/Owner/Desktop/IBHMentees.csv"
 nlp = spacy.load('en')
 
 def readcsv(fileName):
