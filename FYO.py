@@ -12,10 +12,8 @@ def readcsv(fileName):
         reader = csv.DictReader(csvfile)
         a = []
         next(reader)
-        
         for line in reader:
             a.append(line)  
-
     return(a)
 
 def streamSep(fileName):
