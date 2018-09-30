@@ -5,7 +5,7 @@ class Mentor:
         self.name = name
         self.answers = answers
         self.student = None
-        self.hadStudents = False
+        self.hasStudent = False
         self.matchScore = 0
         self.student2 = None
         self.hasStudent2 = False

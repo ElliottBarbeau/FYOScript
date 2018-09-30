@@ -3,8 +3,8 @@ import spacy
 from Student import Student
 from Mentor import Mentor
 
-mentorFileName = "C:/Users/Owner/Desktop/IBHMentors.csv"
-studentFileName = "C:/Users/Owner/Desktop/IBHMentees.csv"
+mentorFileName = "C:/Users/Owner/Desktop/BComMentors.csv"
+studentFileName = "C:/Users/Owner/Desktop/BComMentees.csv"
 nlp = spacy.load('en')
 
 def readcsv(fileName):
@@ -224,33 +224,37 @@ studentList = student(studentFileName)
 
 for i, stud in enumerate(studentList):
     for j, mentor in enumerate(mentorList):
-        stud.dictionary[mentor.getName()] = 0
+        stud.matches[mentor.getName()] = 0
         for k, answers in enumerate(stud.getAnswers()):
             if type(answers == list):
                 for answer in answers:
-                    if answer in mentorList[i].getAnswers()[k]:
+                    if answer in mentor.getAnswers()[k]:
                         stud.matches[mentor.getName()] += weight(k)
             elif answers == mentor.getAnswers()[k]:
                 stud.matches[mentor.getName()] += weight(k)
-
+'''
 for i, stud in enumerate(studentList):
     ans1 = nlp(stud.getLongAnswers()[0])
     for j, mentor in enumerate(mentorList):
             ans2 = nlp(mentor.getLongAnswers()[0])
             sim = ans1.similarity(ans2)
             stud.matches[mentor.getName()] += 0.75 * sim
-
+'''
 for student in studentList:
-    student.topMentors = student.getBestToWorse()[:mentorList.length]
+    student.temp = student.getBestToWorse()
+    for mentor in mentorList:
+        for mentorKey in student.temp:
+            if mentor.name == mentorKey[0]:
+                student.topMentors.append(mentor)
 
-for i in range(topMentors.lengthVariable):
+for i in range(len(mentorList)):
     for student in studentList:
         if student.isMatched is False:
             potTopMentor = student.topMentors.pop(0)
             if potTopMentor.hasStudent is False:
                 potTopMentor.match(student)
             else:
-                if student.matches(potTopMentor.name) > potTopMentor.matchScore:
+                if student.matches[potTopMentor.name] > potTopMentor.student.matches[potTopMentor.name]:
                     potTopMentor.unmatch()
                     potTopMentor.match(student)
 
@@ -258,15 +262,27 @@ unmatchedStudents = []
 for student in studentList:
     if student.isMatched is False:
         unmatchedStudents.append(student)
-        student.topMentors = student.getBestToWorse()[:mentorList.length]
+        student.temp = student.getBestToWorse()
+        for mentor in mentorList:
+            for mentorKey in student.temp:
+                if mentor.name == mentorKey[0]:
+                    student.topMentors.append(mentor)
 
-for i in range(topMentors.lengthVariable):
+for i in range(len(mentorList)):
     for student in unmatchedStudents:
         if student.isMatched is False:
             potTopMentor = student.topMentors.pop(0)
             if potTopMentor.hasStudent2 is False:
                 potTopMentor.match2(student)
             else:
-                if student.matches(potTopMentor.name) > potTopMentor.matchScore:
+                if student.matches[potTopMentor.name] > potTopMentor.student.matches[potTopMentor.name]:
                     potTopMentor.unmatch2()
                     potTopMentor.match2(student)
+
+with open('C:/Users/Owner/Desktop/BComMatches.csv', mode='w', encoding='utf-8') as mentor_file:
+    mentor_writer = csv.writer(mentor_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    for mentor in mentorList:
+        if mentor.hasStudent2 is True:
+            mentor_writer.writerow([mentor.name, mentor.student.name, mentor.student2.name])
+        else:
+            mentor_writer.writerow([mentor.name, mentor.student.name])

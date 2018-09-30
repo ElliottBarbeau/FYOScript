@@ -7,6 +7,7 @@ class Student:
 		self.answers = answers
 		self.isMatched = False
 		self.mentor = None
+		self.temp = []
 		self.topMentors = []
 	
 	def setMatch(self, key, score):
