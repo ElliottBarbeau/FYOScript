@@ -1,11 +1,9 @@
 import csv
-import spacy
 from Student import Student
 from Mentor import Mentor
 
-mentorFileName = "C:/Users/Owner/Desktop/BComMentors.csv"
-studentFileName = "C:/Users/Owner/Desktop/BComMentees.csv"
-nlp = spacy.load('en')
+studentFileName = "C:/Users/socce/Desktop/IBHMentors.csv"
+mentorFileName = "C:/Users/socce/Desktop/IBHMentees.csv"
 
 def readcsv(fileName):
     with open(fileName, encoding="Latin-1") as csvfile:
@@ -279,9 +277,9 @@ for i in range(len(mentorList)):
                     potTopMentor.unmatch2()
                     potTopMentor.match2(student)
 
-with open('C:/Users/Owner/Desktop/BComMatches.csv', mode='w', encoding='utf-8') as mentor_file:
+with open('C:/Users/socce/Desktop/IBHMatches.csv', mode='w', encoding='utf-8') as mentor_file:
     mentor_writer = csv.writer(mentor_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    for mentor in mentorList:
+    for i, mentor in enumerate(mentorList):
         if mentor.hasStudent2 is True:
             mentor_writer.writerow([mentor.name, mentor.student.name, mentor.student2.name])
         else:

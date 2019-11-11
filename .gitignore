@@ -1,2 +1,6 @@
 
 *.csv
+*.pyc
+.vscode/settings.json
+.vscode/settings.json
+.vscode/tasks.json
