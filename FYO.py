@@ -2,6 +2,14 @@ import csv
 from Student import Student
 from Mentor import Mentor
 
+'''
+// TODO //
+
+FIX NATURAL LANGUAGE PROCESSING FOR SEMANTIC SIMILARTY SCORES
+
+// TODO //
+'''
+
 studentFileName = "C:/Users/socce/Desktop/Mentors.csv"
 mentorFileName = "C:/Users/socce/Desktop/Mentees.csv"
 
