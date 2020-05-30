@@ -2,11 +2,11 @@ import csv
 from Student import Student
 from Mentor import Mentor
 
-studentFileName = "C:/Users/socce/Desktop/IBHMentors.csv"
-mentorFileName = "C:/Users/socce/Desktop/IBHMentees.csv"
+studentFileName = "C:/Users/socce/Desktop/Mentors.csv"
+mentorFileName = "C:/Users/socce/Desktop/Mentees.csv"
 
 def readcsv(fileName):
-    with open(fileName, encoding="Latin-1") as csvfile:
+    with open(fileName, encoding="UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
         a = []
         next(reader)
@@ -14,82 +14,13 @@ def readcsv(fileName):
             a.append(line)  
     return(a)
 
-def streamSep(fileName):
-    with open(fileName, encoding="Latin-1") as csvfile:
+def separate(fileName, arg):
+    with open(fileName, encoding="UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        final = []
-        temp = []
+        final, temp = [], []
         
         for line in reader:
-            temp.append(line['stream'])
-        
-        for i in temp:
-            if ";" in i:
-                final.append(i.split(";"))
-            else:
-                final.append(i)
-
-    return(final)
-
-def internshipSep(fileName):
-    with open(fileName, encoding="Latin-1") as csvfile:
-        reader = csv.DictReader(csvfile)
-        final = []
-        temp = []
-        
-        for line in reader:
-            temp.append(line['internship'])
-        
-        for i in temp:
-            if ";" in i:
-                final.append(i.split(";"))
-            else:
-                final.append(i)
-
-    return(final)
-
-def clubsSep(fileName):
-    with open(fileName, encoding="Latin-1") as csvfile:
-        reader = csv.DictReader(csvfile)
-        final = []
-        temp = []
-        
-        for line in reader:
-            temp.append(line['clubs'])
-        
-        for i in temp:
-            if ";" in i:
-                final.append(i.split(";"))
-            else:
-                final.append(i)
-
-    return(final)
-
-def skillsSep(fileName):
-    with open(fileName, encoding="Latin-1") as csvfile:
-        reader = csv.DictReader(csvfile)
-        final = []
-        temp = []
-        
-        for line in reader:
-            temp.append(line['skills'])
-        
-        for i in temp:
-            if ";" in i:
-                final.append(i.split(";"))
-            else:
-                final.append(i)
-
-    return(final)
-
-def profSkillsSep(fileName):
-    with open(fileName, encoding="Latin-1") as csvfile:
-        reader = csv.DictReader(csvfile)
-        final = []
-        temp = []
-        
-        for line in reader:
-            temp.append(line['profSkills'])
+            temp.append(line[arg])
         
         for i in temp:
             if ";" in i:
@@ -100,13 +31,9 @@ def profSkillsSep(fileName):
     return(final)
 
 def mentorLongAnswers(fileName):
-    with open(fileName, encoding = "Latin-1") as csvfile:
+    with open(fileName, encoding = "UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        interests = []
-        tvShows = []
-        sports = []
-        music = []
-        final = []
+        interests, tvShows, sports, music, final = [], [], [], [], []
 
         for line in reader:
                 interests.append(line['interests'])
@@ -116,102 +43,64 @@ def mentorLongAnswers(fileName):
 
         for i, interest in enumerate(interests):
             longAnswers = []
-            longAnswers.append(interest)
-            longAnswers.append(tvShows[i])
-            longAnswers.append(sports[i])
-            longAnswers.append(music[i])
+            longAnswers.extend((interest, tvShows[i], sports[i], music[i]))
             final.append(list(longAnswers))
     
     return final
 
 def studentLongAnswers(fileName):
-    with open(fileName, encoding = "Latin-1") as csvfile:
+    with open(fileName, encoding = "UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        interests = []
-        tvShows = []
-        sports = []
-        music = []
-        final = []
+        interests, tvShows, sports, music, final = [], [], [], [], []
 
         for line in reader:
-                interests.append(line['interests'])
-                tvShows.append(line['tvShows'])
-                sports.append(line['sports'])
-                music.append(line['music'])
+            interests.append(line['interests'])
+            tvShows.append(line['tvShows'])
+            sports.append(line['sports'])
+            music.append(line['music'])
 
         for i, interest in enumerate(interests):
             longAnswers = []
-            longAnswers.append(interest)
-            longAnswers.append(tvShows[i])
-            longAnswers.append(sports[i])
-            longAnswers.append(music[i])
+            longAnswers.extend((interest, tvShows[i], sports[i], music[i]))
             final.append(list(longAnswers))
     
     return final
 
 def weight(q):
-    if q == 0:
-        return 2
-    elif q == 1:
-        return 0.5
-    elif q == 2:
-        return 0.5
-    elif q == 3:
-        return 1.5
-    elif q == 4:
-        return 1
+    weight = [2, 0.5, 0.5, 1.5, 1]
+    return weight[q]
 
 def mentor(fileName):
-    with open(fileName, encoding="Latin-1") as csvfile:
+    with open(fileName, encoding="UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        name = []
-        mentor = []
-        answers = []
+        name, mentor, answers = [], [], []
         
         for line in reader:
             name.append(line['name'])
         
-        stream = streamSep(mentorFileName)
-        internship = internshipSep(mentorFileName)
-        clubs = clubsSep(mentorFileName)
-        skills = skillsSep(mentorFileName)
-        profSkills = profSkillsSep(mentorFileName)
+        stream, internship, clubs, skills, profSkills = separate(mentorFileName, "stream"), separate(mentorFileName, "internship"), separate(mentorFileName, "clubs"), separate(mentorFileName, "skills"), separate(mentorFileName, "profSkills")
 
         for i in range(0, len(stream)):
             mLA = mentorLongAnswers(mentorFileName)
-            answers.append(stream[i])
-            answers.append(internship[i])
-            answers.append(clubs[i])
-            answers.append(skills[i])
-            answers.append(profSkills[i])
+            answers.extend((stream[i], internship[i], clubs[i], skills[i], profSkills[i]))
             mentor.append(Mentor(name[i], answers, mLA[i]))
             answers = []
 
     return(mentor)
 
 def student(fileName):
-    with open(fileName, encoding="Latin-1") as csvfile:
+    with open(fileName, encoding="UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        name = []
-        student = []
-        answers = []
+        name, student, answers = [], [], []
         
         for line in reader:
             name.append(line['name'])
         
-        stream = streamSep(studentFileName)
-        internship = internshipSep(studentFileName)
-        clubs = clubsSep(studentFileName)
-        skills = skillsSep(studentFileName)
-        profSkills = profSkillsSep(studentFileName)
+        stream, internship, clubs, skills, profSkills = separate(studentFileName, "stream"), separate(studentFileName, "internship"), separate(studentFileName, "clubs"), separate(studentFileName, "skills"), separate(studentFileName, "profSkills")
 
         for i in range(0, len(stream)):
             sLA = studentLongAnswers(studentFileName)
-            answers.append(stream[i])
-            answers.append(internship[i])
-            answers.append(clubs[i])
-            answers.append(skills[i])
-            answers.append(profSkills[i])
+            answers.extend((stream[i], internship[i], clubs[i], skills[i], profSkills[i]))
             student.append(Student(name[i], answers, sLA[i]))
             answers = []
 
@@ -230,6 +119,7 @@ for i, stud in enumerate(studentList):
                         stud.matches[mentor.getName()] += weight(k)
             elif answers == mentor.getAnswers()[k]:
                 stud.matches[mentor.getName()] += weight(k)
+
 '''
 for i, stud in enumerate(studentList):
     ans1 = nlp(stud.getLongAnswers()[0])
@@ -279,8 +169,9 @@ for i in range(len(mentorList)):
 
 with open('C:/Users/socce/Desktop/IBHMatches.csv', mode='w', encoding='utf-8') as mentor_file:
     mentor_writer = csv.writer(mentor_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    mentor_writer.writerow(["mentee", "mentor(s)"])
     for i, mentor in enumerate(mentorList):
         if mentor.hasStudent2 is True:
-            mentor_writer.writerow([mentor.name, mentor.student.name, mentor.student2.name])
+            mentor_writer.writerow([mentor.name.strip(), mentor.student.name.strip() + "+" + mentor.student2.name.strip()])
         else:
-            mentor_writer.writerow([mentor.name, mentor.student.name])
+            mentor_writer.writerow([mentor.name.strip(), mentor.student.name.strip()])
