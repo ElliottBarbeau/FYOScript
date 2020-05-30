@@ -1,4 +1,5 @@
 import csv
+import spacy
 from Student import Student
 from Mentor import Mentor
 
@@ -12,6 +13,7 @@ FIX NATURAL LANGUAGE PROCESSING FOR SEMANTIC SIMILARTY SCORES
 
 studentFileName = "C:/Users/socce/Desktop/Mentors.csv"
 mentorFileName = "C:/Users/socce/Desktop/Mentees.csv"
+nlp = spacy.load("en_core_web_md")
 
 def readcsv(fileName):
     with open(fileName, encoding="UTF-8") as csvfile:
@@ -117,6 +119,14 @@ def student(fileName):
 mentorList = mentor(mentorFileName)
 studentList = student(studentFileName)
 
+for student in studentList:
+    for answer in student.getLongAnswers():
+        student.nlpAnswers.append(nlp(answer))
+
+for mentor in mentorList:
+    for answer in mentor.getLongAnswers():
+        mentor.nlpAnswers.append(nlp(answer))
+
 for i, stud in enumerate(studentList):
     for j, mentor in enumerate(mentorList):
         stud.matches[mentor.getName()] = 0
@@ -128,14 +138,13 @@ for i, stud in enumerate(studentList):
             elif answers == mentor.getAnswers()[k]:
                 stud.matches[mentor.getName()] += weight(k)
 
-'''
-for i, stud in enumerate(studentList):
-    ans1 = nlp(stud.getLongAnswers()[0])
-    for j, mentor in enumerate(mentorList):
-            ans2 = nlp(mentor.getLongAnswers()[0])
-            sim = ans1.similarity(ans2)
-            stud.matches[mentor.getName()] += 0.75 * sim
-'''
+for student in studentList:
+    for mentor in mentorList:
+        print(student.getNlpAnswers()[0])
+        print(mentor.getNlpAnswers()[0])
+        sim = student.getNlpAnswers()[0].similarity(mentor.getNlpAnswers()[0])
+        student.matches[mentor.getName()] += 0.75 * sim
+
 for student in studentList:
     student.temp = student.getBestToWorse()
     for mentor in mentorList:
@@ -145,9 +154,9 @@ for student in studentList:
 
 for i in range(len(mentorList)):
     for student in studentList:
-        if student.isMatched is False:
+        if not student.isMatched:
             potTopMentor = student.topMentors.pop(0)
-            if potTopMentor.hasStudent is False:
+            if not potTopMentor.hasStudent:
                 potTopMentor.match(student)
             else:
                 if student.matches[potTopMentor.name] > potTopMentor.student.matches[potTopMentor.name]:
@@ -156,7 +165,7 @@ for i in range(len(mentorList)):
 
 unmatchedStudents = []     
 for student in studentList:
-    if student.isMatched is False:
+    if not student.isMatched:
         unmatchedStudents.append(student)
         student.temp = student.getBestToWorse()
         for mentor in mentorList:
@@ -166,9 +175,9 @@ for student in studentList:
 
 for i in range(len(mentorList)):
     for student in unmatchedStudents:
-        if student.isMatched is False:
+        if not student.isMatched:
             potTopMentor = student.topMentors.pop(0)
-            if potTopMentor.hasStudent2 is False:
+            if not potTopMentor.hasStudent2:
                 potTopMentor.match2(student)
             else:
                 if student.matches[potTopMentor.name] > potTopMentor.student.matches[potTopMentor.name]:
@@ -179,7 +188,7 @@ with open('C:/Users/socce/Desktop/IBHMatches.csv', mode='w', encoding='utf-8') a
     mentor_writer = csv.writer(mentor_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     mentor_writer.writerow(["mentee", "mentor(s)"])
     for i, mentor in enumerate(mentorList):
-        if mentor.hasStudent2 is True:
+        if mentor.hasStudent2:
             mentor_writer.writerow([mentor.name.strip(), mentor.student.name.strip() + "+" + mentor.student2.name.strip()])
         else:
             mentor_writer.writerow([mentor.name.strip(), mentor.student.name.strip()])

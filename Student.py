@@ -9,6 +9,7 @@ class Student:
 		self.mentor = None
 		self.temp = []
 		self.topMentors = []
+		self.nlpAnswers = []
 	
 	def setMatch(self, key, score):
 		self.matches[key] = score
@@ -23,3 +24,6 @@ class Student:
 
 	def getLongAnswers(self):
 		return self.longAnswers
+
+	def getNlpAnswers(self):
+		return self.nlpAnswers
