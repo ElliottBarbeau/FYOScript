@@ -4,11 +4,19 @@ from Student import Student
 from Mentor import Mentor
 
 '''
+
+// NOTE //
+
+Headers: Timestamp, name, email, phoneNumber, temp, level, stream, internship, clubs, skills, profSkills, commuting, interests, tvShows, sports, music
+newHeader: Timestamp,email,name,temp,stream,internship,commuting,city,clubs,skills,profSkills,interests,tvShows,sports,music,ethnicity,temp3
+Matching Prioritization for 2020 needs to be Location > Ethnicity > everything else
+
 // TODO //
 
-FIX NATURAL LANGUAGE PROCESSING FOR SEMANTIC SIMILARTY SCORES
+FIX NATURAL LANGUAGE PROCESSING FOR SEMANTIC SIMILARiTY SCORES
+Change header in csv files to match what I need
+Run the script and make changes to weighting of some categories as necessary
 
-// TODO //
 '''
 
 studentFileName = "C:/Users/socce/Desktop/Mentors.csv"
@@ -61,17 +69,18 @@ def mentorLongAnswers(fileName):
 def studentLongAnswers(fileName):
     with open(fileName, encoding = "UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        interests, tvShows, sports, music, final = [], [], [], [], []
+        interests, tvShows, sports, music, ethnicity, final = [], [], [], [], [], []
 
         for line in reader:
             interests.append(line['interests'])
             tvShows.append(line['tvShows'])
             sports.append(line['sports'])
             music.append(line['music'])
+            ethnicity.append(line['ethnicity'])
 
         for i, interest in enumerate(interests):
             longAnswers = []
-            longAnswers.extend((interest, tvShows[i], sports[i], music[i]))
+            longAnswers.extend((interest, tvShows[i], sports[i], music[i], ethnicity[i]))
             final.append(list(longAnswers))
     
     return final
@@ -140,10 +149,9 @@ for i, stud in enumerate(studentList):
 
 for student in studentList:
     for mentor in mentorList:
-        print(student.getNlpAnswers()[0])
-        print(mentor.getNlpAnswers()[0])
-        sim = student.getNlpAnswers()[0].similarity(mentor.getNlpAnswers()[0])
-        student.matches[mentor.getName()] += 0.75 * sim
+        if student.getNlpAnswers()[0] is not "" and mentor.getNlpAnswers()[0] is not "":
+            sim = student.getNlpAnswers()[0].similarity(mentor.getNlpAnswers()[0])
+            student.matches[mentor.getName()] += 0.75 * sim
 
 for student in studentList:
     student.temp = student.getBestToWorse()
@@ -184,7 +192,7 @@ for i in range(len(mentorList)):
                     potTopMentor.unmatch2()
                     potTopMentor.match2(student)
 
-with open('C:/Users/socce/Desktop/IBHMatches.csv', mode='w', encoding='utf-8') as mentor_file:
+with open('C:/Users/socce/Desktop/Business1Matches.csv', mode='w', encoding='utf-8') as mentor_file:
     mentor_writer = csv.writer(mentor_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     mentor_writer.writerow(["mentee", "mentor(s)"])
     for i, mentor in enumerate(mentorList):
