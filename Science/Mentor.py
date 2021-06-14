@@ -1,6 +1,6 @@
 class Mentor:
 
-    def __init__(self, name, answers, longAnswers):
+    def __init__(self, name, answers, longAnswers, email):
         self.longAnswers = longAnswers
         self.name = name
         self.answers = answers
@@ -10,7 +10,7 @@ class Mentor:
         self.student2 = None
         self.hasStudent2 = False
         self.matchScore2 = 0
-        self.nlpAnswers = []
+        self.email = email
 
     def unmatch(self):
         tempStudent = self.student
@@ -48,7 +48,4 @@ class Mentor:
 
     def getLongAnswers(self):
         return self.longAnswers
-
-    def getNlpAnswers(self):
-        return self.nlpAnswers
         

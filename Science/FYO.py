@@ -23,15 +23,6 @@ studentFileName = "C:/Users/socce/Desktop/Mentors.csv"
 mentorFileName = "C:/Users/socce/Desktop/Mentees.csv"
 nlp = spacy.load("en_core_web_md")
 
-def readcsv(fileName):
-    with open(fileName, encoding="UTF-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        a = []
-        next(reader)
-        for line in reader:
-            a.append(line)  
-    return(a)
-
 def separate(fileName, arg):
     with open(fileName, encoding="UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
@@ -46,101 +37,77 @@ def separate(fileName, arg):
             else:
                 final.append(i)
 
-    return(final)
-
-def mentorLongAnswers(fileName):
-    with open(fileName, encoding = "UTF-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        interests, tvShows, sports, music, final = [], [], [], [], []
-
-        for line in reader:
-                interests.append(line['interests'])
-                tvShows.append(line['tvShows'])
-                sports.append(line['sports'])
-                music.append(line['music'])
-
-        for i, interest in enumerate(interests):
-            longAnswers = []
-            longAnswers.extend((interest, tvShows[i], sports[i], music[i]))
-            final.append(list(longAnswers))
-    
     return final
 
-def studentLongAnswers(fileName):
+def longAnswers(fileName):
     with open(fileName, encoding = "UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        interests, tvShows, sports, music, ethnicity, final = [], [], [], [], [], []
+        hobbies, worries, language, final = [], [], [], []
 
         for line in reader:
-            interests.append(line['interests'])
-            tvShows.append(line['tvShows'])
-            sports.append(line['sports'])
-            music.append(line['music'])
-            ethnicity.append(line['ethnicity'])
+                hobbies.append(line['hobbies'])
+                worries.append(line['worries'])
+                language.append(line['language'])
 
-        for i, interest in enumerate(interests):
-            longAnswers = []
-            longAnswers.extend((interest, tvShows[i], sports[i], music[i], ethnicity[i]))
-            final.append(list(longAnswers))
+        for i in range(len(hobbies)):
+            longAnswers = [hobbies[i], worries[i], language[i]]
+            final.append(longAnswers)
     
     return final
 
 def weight(q):
-    weight = [2, 0.5, 0.5, 1.5, 1]
+    weight = [1, 0.25, 2, 1.5]
     return weight[q]
 
 def mentor(fileName):
     with open(fileName, encoding="UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        name, mentor, answers = [], [], []
+        name, mentor, email = [], [], ""
+        mLA = longAnswers(mentorFileName)
         
         for line in reader:
             name.append(line['name'])
+            email.append(line['email'])
         
-        stream, internship, clubs, skills, profSkills = separate(mentorFileName, "stream"), separate(mentorFileName, "internship"), separate(mentorFileName, "clubs"), separate(mentorFileName, "skills"), separate(mentorFileName, "profSkills")
+        program, commute, helpme, interests = separate(mentorFileName, "program"), separate(mentorFileName, "commute"), separate(mentorFileName, "helpme"), separate(mentorFileName, "interests")
 
-        for i in range(0, len(stream)):
-            mLA = mentorLongAnswers(mentorFileName)
-            answers.extend((stream[i], internship[i], clubs[i], skills[i], profSkills[i]))
-            mentor.append(Mentor(name[i], answers, mLA[i]))
+        for i in range(len(program)):
+            answers = [program[i], commute[i], helpme[i].split(', '), interests[i].split(', ')]
+            mentor.append(Mentor(name[i], answers, mLA[i], email[i]))
             answers = []
 
-    return(mentor)
+    return mentor
 
 def student(fileName):
     with open(fileName, encoding="UTF-8") as csvfile:
         reader = csv.DictReader(csvfile)
-        name, student, answers = [], [], []
+        name, student, answers, email = [], [], [], []
+        sLA = longAnswers(studentFileName)
         
         for line in reader:
             name.append(line['name'])
+            email.append(line['email'])
         
-        stream, internship, clubs, skills, profSkills = separate(studentFileName, "stream"), separate(studentFileName, "internship"), separate(studentFileName, "clubs"), separate(studentFileName, "skills"), separate(studentFileName, "profSkills")
+        program, commute, helpme, interests = separate(studentFileName, "program"), separate(studentFileName, "commute"), separate(studentFileName, "helpme"), separate(studentFileName, "interests")
 
-        for i in range(0, len(stream)):
-            sLA = studentLongAnswers(studentFileName)
-            answers.extend((stream[i], internship[i], clubs[i], skills[i], profSkills[i]))
-            student.append(Student(name[i], answers, sLA[i]))
+        for i in range(len(program)):
+            answers = [program[i], commute[i], helpme[i], interests[i]]
+            student.append(Student(name[i], answers, sLA[i], email[i]))
             answers = []
 
-    return(student)
+    return student
 
 mentorList = mentor(mentorFileName)
 studentList = student(studentFileName)
 
-for student in studentList:
-    for answer in student.getLongAnswers():
-        student.nlpAnswers.append(nlp(answer))
-
-for mentor in mentorList:
-    for answer in mentor.getLongAnswers():
-        mentor.nlpAnswers.append(nlp(answer))
-
-for i, stud in enumerate(studentList):
-    for j, mentor in enumerate(mentorList):
+for i in range(len(studentList)):
+    stud = studentList[i]
+    for j in range(len(mentorList)):
+        mentor = mentorList[j]
         stud.matches[mentor.getName()] = 0
-        for k, answers in enumerate(stud.getAnswers()):
-            if type(answers == list):
+        for k in range(len(stud.getAnswers())):
+            answers = stud.getAnswers()[k]
+            if type(answers) == list:
                 for answer in answers:
                     if answer in mentor.getAnswers()[k]:
                         stud.matches[mentor.getName()] += weight(k)
@@ -149,14 +116,14 @@ for i, stud in enumerate(studentList):
 
 for student in studentList:
     for mentor in mentorList:
-        if student.getNlpAnswers()[0] is not "" and mentor.getNlpAnswers()[0] is not "":
-            sim = student.getNlpAnswers()[0].similarity(mentor.getNlpAnswers()[0])
-            student.matches[mentor.getName()] += 0.75 * sim
+        for k in range(len(student.getLongAnswers())):
+            if student.getLongAnswers()[k] and mentor.getLongAnswers()[k]:
+                sim = student.getLongAnswers()[k].similarity(mentor.getLongAnswers()[k])
+                student.matches[mentor.getName()] += 0.75 * sim
 
 for student in studentList:
-    student.temp = student.getBestToWorse()
     for mentor in mentorList:
-        for mentorKey in student.temp:
+        for mentorKey in student.getBestToWorse():
             if mentor.name == mentorKey[0]:
                 student.topMentors.append(mentor)
 
@@ -166,37 +133,46 @@ for i in range(len(mentorList)):
             potTopMentor = student.topMentors.pop(0)
             if not potTopMentor.hasStudent:
                 potTopMentor.match(student)
+                student.isMatched = True
             else:
                 if student.matches[potTopMentor.name] > potTopMentor.student.matches[potTopMentor.name]:
+                    potTopMentor.student.isMatched = False
                     potTopMentor.unmatch()
                     potTopMentor.match(student)
+                    student.isMatched = True
 
 unmatchedStudents = []     
 for student in studentList:
     if not student.isMatched:
         unmatchedStudents.append(student)
-        student.temp = student.getBestToWorse()
         for mentor in mentorList:
-            for mentorKey in student.temp:
+            for mentorKey in student.getBestToWorse():
                 if mentor.name == mentorKey[0]:
                     student.topMentors.append(mentor)
 
-for i in range(len(mentorList)):
-    for student in unmatchedStudents:
-        if not student.isMatched:
+while unmatchedStudents:
+    for i in range(len(mentorList)):
+        for student in unmatchedStudents:
             potTopMentor = student.topMentors.pop(0)
             if not potTopMentor.hasStudent2:
                 potTopMentor.match2(student)
+                student.isMatched = True
             else:
                 if student.matches[potTopMentor.name] > potTopMentor.student.matches[potTopMentor.name]:
+                    potTopMentor.student.isMatched = False
                     potTopMentor.unmatch2()
                     potTopMentor.match2(student)
+                    student.isMatched = True
+
+            if student.isMatched:
+                unmatchedStudents.remove(student)
 
 with open('C:/Users/socce/Desktop/Business1Matches.csv', mode='w', encoding='utf-8') as mentor_file:
     mentor_writer = csv.writer(mentor_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     mentor_writer.writerow(["mentee", "mentor(s)"])
     for i, mentor in enumerate(mentorList):
         if mentor.hasStudent2:
-            mentor_writer.writerow([mentor.name.strip(), mentor.student.name.strip() + "+" + mentor.student2.name.strip()])
+            mentor_writer.writerow([mentor.name.strip() + ": {}".format(mentor.email.strip()),
+            mentor.student.name.strip() + ": {}".format(mentor.student.email.strip()) + "+" + mentor.student2.name.strip() + ": {}".format(mentor.student2.email.strip())])
         else:
-            mentor_writer.writerow([mentor.name.strip(), mentor.student.name.strip()])
+            mentor_writer.writerow([mentor.name.strip() + ": {}".format(mentor.email.strip()), mentor.student.name.strip() + ": {}".format(mentor.student.email.strip())])
