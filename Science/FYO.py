@@ -56,7 +56,7 @@ def longAnswers(fileName):
     return final
 
 def weight(q):
-    weight = [1, 0.25, 2, 1.5]
+    weight = [2, 1.5, 0.75, 0.5]
     return weight[q]
 
 def mentor(fileName):
